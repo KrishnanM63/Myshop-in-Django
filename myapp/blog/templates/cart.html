@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container my-5">
+       {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <h2 class="text-center mb-4">🛒 Your Cart</h2>
+
+    {% if products %}
+    <form method="post" action="{% url 'update_cart' %}">
+      {% csrf_token %}
+      <table class="table table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Product</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in products %}
+          <tr>
+            <td><img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="80"></td>
+            <td>{{ item.product.name }}</td>
+            <td>₹ {{ item.product.price }}</td>
+            <td>
+              <input type="number" name="quantity_{{ item.product.id }}" value="{{ item.qty }}" min="1" class="form-control" style="width:80px;">
+            </td>
+            <td>₹ {{ item.subtotal }}</td>
+            <td>
+              <a href="{% url 'remove_cart' item.product.id %}" class="btn btn-danger btn-sm">Remove</a>
+            </td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="4" class="text-end"><strong>Total:</strong></td>
+            <td colspan="2"><strong>₹ {{ total }}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary">Update Cart</button>
+        <a href="{% url 'place_order' %}" class="btn btn-success">Place Order</a>
+      </div>
+    </form>
+    {% else %}
+    <p class="text-center">Your cart is empty.</p>
+    {% endif %}
+  </div>
+    {% endblock %}
+

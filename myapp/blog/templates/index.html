@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <!-- Hero Section -->
+  <header class="bg-primary text-white text-center py-5">
+    <div class="container">
+      <h1>Welcome to MyShop</h1>
+      <p class="lead">Best Products at Affordable Prices</p>
+    </div>
+  </header>
+
+  <!-- Products Section -->
+  <div class="container my-5">
+    <div class="row">
+      {% for p in products %}
+      {% csrf_token %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+          <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}" width="80" height="250">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ p.name }}</h5>
+            <p class="card-text text-muted">{{ p.description|truncatewords:10 }}</p>
+            <h6 class="text-success">₹ {{ p.price }}</h6>
+            <a href="{% url "add" p.id %}" class="btn btn-primary">Add to Cart</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center">No products available.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endblock %}
+
